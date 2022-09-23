@@ -29,7 +29,7 @@ dag = DAG(
 # set tasks
 bash_task = BashOperator(
     task_id = "bash_task",
-    bash_command = 'service --status-all; ps -aux; pip freeze', # list services, processes and python packages
+    bash_command = 'echo "hello world"', # list services, processes and python packages
     dag = dag
 )
 
