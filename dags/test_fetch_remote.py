@@ -26,10 +26,12 @@ dag = DAG(
     catchup = False
 )
 
+
+
 # set tasks
 fetch_task = BashOperator(
     task_id = "fetch_task",
-    bash_command = 'curl --location \'https://postman-echo.com/get?foo1=bar1&foo2=bar2\'', # list services, processes and python packages
+    bash_command = "curl --location 'https://postman-echo.com/get?foo1=bar1&foo2=bar2' ", # list services, processes and python packages
     dag = dag
 )
 
