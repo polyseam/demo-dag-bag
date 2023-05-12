@@ -11,7 +11,7 @@ from airflow.operators.bash_operator import BashOperator
 
 # default DAG arguments
 default_args = {
-    "owner": "untribe",
+    "owner": "Polyseam",
     "retries": 1,
     "retry_delay": timedelta(minutes=5)
 }
@@ -29,7 +29,7 @@ dag = DAG(
 # set tasks
 bash_task = BashOperator(
     task_id = "bash_task",
-    bash_command = 'echo "hello world"', # list services, processes and python packages
+    bash_command = 'echo "hello world"',
     dag = dag
 )
 

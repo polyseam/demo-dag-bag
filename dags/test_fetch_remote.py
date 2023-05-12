@@ -11,7 +11,7 @@ from airflow.operators.bash_operator import BashOperator
 
 # default DAG arguments
 default_args = {
-    "owner": "untribe",
+    "owner": "Polyseam",
     "retries": 1,
     "retry_delay": timedelta(minutes=5)
 }
