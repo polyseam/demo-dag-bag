@@ -17,6 +17,7 @@ spec:
     mainApplicationFile: 'local:///git/repo/pythonprogs/prog.py'
     sparkVersion: 3.5.0
     sparkConf:
+      "spark.kubernetes.namespace": "sparkapplication"
       spark.eventLog.enabled: 'true'
       spark.eventLog.dir: /mnt/spark-logs
     volumes:
