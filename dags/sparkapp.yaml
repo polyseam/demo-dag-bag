@@ -1,0 +1,70 @@
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: ScheduledSparkApplication
+metadata:
+  name: spark-pi-python
+  namespace: sparkapplication
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  schedule: '*/10 * * * *'
+  concurrencyPolicy: Allow
+  template:
+    type: Python
+    pythonVersion: '3'
+    mode: cluster
+    image: 'spark:3.5.0'
+    imagePullPolicy: Always
+    mainApplicationFile: 'local:///git/repo/pythonprogs/prog.py'
+    sparkVersion: 3.5.0
+    sparkConf:
+      spark.eventLog.enabled: 'true'
+      spark.eventLog.dir: /mnt/spark-logs
+    volumes:
+      - name: spark-local-dir
+        emptyDir: {}
+    driver:
+      labels:
+        version: 3.5.0
+      cores: 1
+      coreLimit: 1200m
+      memory: 512m
+      serviceAccount: spark-spark-operator-spark
+      volumeMounts:
+        - name: spark-local-dir
+          mountPath: /mnt/spark-logs
+        - name: spark-local-dir
+          mountPath: /git/repo
+      initContainers:
+        - name: git-sync-sidecar
+          image: 'registry.k8s.io/git-sync/git-sync:v4.2.3'
+          args:
+            - '--repo=https://github.com/vipmarwah/pythonprogs'
+            - '--root=/git/repo'
+          env:
+            - name: GITSYNC_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: sparkapp-git-credentials
+                  key: GITSYNC_USERNAME
+            - name: GITSYNC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sparkapp-git-credentials
+                  key: GITSYNC_PASSWORD
+            - name: GITSYNC_BRANCH
+              value: main
+            - name: GITSYNC_REV
+              value: v1.0.0
+            - name: GITSYNC_ONE_TIME
+              value: 'true'
+          volumeMounts:
+            - name: spark-local-dir
+              mountPath: /git/repo
+      deleteOnTermination: true
+    executor:
+      labels:
+        version: 3.5.0
+      instances: 1
+      cores: 1
+      coreLimit: 1200m
+      memory: 512m
