@@ -19,8 +19,8 @@ submit_spark_app = KubernetesPodOperator(
     is_delete_operator_pod=True,
     in_cluster=True,
     dag=dag,
-    #cmds=["kubectl", "apply", "-f", "/path/to/sparkapplication.yaml"],
+    cmds=["kubectl", "apply", "-f", "https://github.com/polyseam/demo-dag-bag/edit/main/dags/sparkapplication.yaml"],
     image="bitnami/kubectl:latest",
-    #arguments=["apply", "-f", "/path/to/sparkapplication.yaml"],
+   
 )
 
